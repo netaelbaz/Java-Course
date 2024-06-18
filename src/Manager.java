@@ -27,8 +27,8 @@ public class Manager {
     }
 
     public void addNewBuyer(String username, String password, Address address) {
-        Username user = new Username(username, password, address);
-        Buyer newBuyer = new Buyer(user);
+        Username user = new Username(username, password);
+        Buyer newBuyer = new Buyer(user, address);
 
         if (this.buyersAmount == this.buyers.length) {
             increaseBuyersArray();
@@ -40,14 +40,20 @@ public class Manager {
     private  void increaseSellersArray() {
         // increase array size by 2 and return new array
         int newArrayLength = (this.sellersAmount == 0) ? 1 : this.sellersAmount *2;
-        Seller[] tempArray = Arrays.copyOf(this.sellers, newArrayLength);
+        Seller[] tempArray = new Seller[newArrayLength];
+        for (int i = 0; i < this.sellersAmount; i++) {
+            tempArray[i] = this.sellers[i];
+        }
         this.sellers = tempArray;
     }
 
     private  void increaseBuyersArray() {
         // increase array size by 2 and return new array
         int newArrayLength = (this.buyersAmount == 0) ? 1 : this.buyersAmount *2;
-        Buyer[] tempArray = Arrays.copyOf(this.buyers, newArrayLength);
+        Buyer[] tempArray = new Buyer[newArrayLength];
+        for (int i = 0; i < this.buyersAmount; i++) {
+            tempArray[i] = this.buyers[i];
+        }
         this.buyers = tempArray;
     }
 
@@ -71,7 +77,52 @@ public class Manager {
         return false;
     }
 
-    public void addProductToSeller(int sellerIndex,String productName,double productPrice) {
-        this.sellers[sellerIndex].addProduct(new Product(productName, productPrice));
+    public void addProductToSeller(int sellerIndex, String productName, double productPrice) {
+        Product newProduct = new Product(productName, productPrice);
+        this.sellers[sellerIndex-1].addProduct(newProduct);
     }
+
+    public int getSellersAmount() {
+        return this.sellersAmount;
+    }
+
+    public int getBuyersAmount() {
+        return this.buyersAmount;
+    }
+
+    public void printSellersName() {
+        for (int i = 0; i < this.sellersAmount; i++) {
+            System.out.println(i+1 + ". " + this.sellers[i].getUser().getName());
+        }
+    }
+
+    public void printBuyersName() {
+        for (int i = 0; i < this.buyersAmount; i++) {
+            System.out.println(i+1 + ". " + this.buyers[i].getUser().getName());
+        }
+    }
+
+    public void printProductsOfSeller(int sellerIndex) {
+        System.out.println(this.sellers[sellerIndex-1].printProducts());
+    }
+
+    public void addProductToCart(int productIndex, int buyerIndex, int sellerIndex) {
+        Product requestedProduct = this.sellers[sellerIndex].getProductByIndex(productIndex);
+        Product productToCart = new Product(requestedProduct);
+        this.buyers[buyerIndex].updateCart(productToCart);
+
+    }
+
+    public void sellerToString() {
+        for (Seller seller : this.sellers) {
+            System.out.println(seller.toString());
+        }
+    }
+
+    public void buyerToString() {
+        for (Buyer buyer : this.buyers) {
+            System.out.println(buyer.toString());
+        }
+    }
+
 }

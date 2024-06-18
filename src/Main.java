@@ -34,19 +34,19 @@ public class Main {
                     addNewBuyer();
                     break;
                 case 3:
-//                    addProductSeller();
+                    addProductToSeller();
                     break;
                 case 4:
-//                    addProductBuyer();
+                    addProductBuyer();
                     break;
                 case 5:
 //                    payment();
                     break;
                 case 6:
-//                    printInfo(buyers, buyersAmount);
+                    manager.buyerToString();
                     break;
                 case 7:
-//                    printInfo(sellers, sellersAmount);
+                    manager.sellerToString();
                     break;
                 default:
                     System.out.println("invalid choice");
@@ -55,7 +55,6 @@ public class Main {
         }
         while (choice != 0);
     }
-
     private static void addNewSeller() {
         String username;
         boolean isDuplicate;
@@ -98,6 +97,57 @@ public class Main {
         manager.addNewBuyer(username, password, buyerAddress);
 
     }
+
+    private static void addProductToSeller() {
+        int sellersAmount = manager.getSellersAmount();
+        if (sellersAmount == 0) {
+            System.out.println("No sellers yet");
+        }
+        else {
+            System.out.println("Please choose the number of the seller to add the product to: ");
+            manager.printSellersName();
+            int sellerIndex = scanner.nextInt();
+            if (sellerIndex > sellersAmount || sellerIndex < 0) {
+                System.out.println("Index not valid");
+                return;
+            }
+            System.out.println("Please enter the name of the product: ");
+            String productName = scanner.next();
+            System.out.println("Please enter the price of the product: ");
+            double price = scanner.nextDouble();
+            manager.addProductToSeller(sellerIndex, productName, price);
+        }
+    }
+
+    private static void addProductBuyer() {
+        // add product to buyer and specify which seller to buy from
+        int sellersAmount = manager.getSellersAmount();
+        int buyersAmount = manager.getBuyersAmount();
+        if (sellersAmount == 0 || buyersAmount == 0) {
+            System.out.println("No buyers or sellers yet, can't finish action");
+            return;
+        }
+        System.out.println("Please choose the number of the buyer to add the product to: ");
+        manager.printBuyersName();
+        int buyerIndex = scanner.nextInt();
+        if (buyerIndex > buyersAmount || buyerIndex < 0) {
+            System.out.println("Buyer index not valid");
+            return;
+        }
+        System.out.println("Please choose the number of the seller you want to buy from: ");
+        manager.printSellersName();
+        int sellerIndex = scanner.nextInt();
+        if (sellerIndex > sellersAmount || sellerIndex < 0) {
+            System.out.println("Seller index not valid");
+            return;
+        }
+        System.out.println("Please enter the name of the product from the seller's products: ");
+        manager.printProductsOfSeller(sellerIndex);
+        int productIndex = scanner.nextInt();
+        // validate index
+        manager.addProductToCart(productIndex-1, buyerIndex-1, sellerIndex-1);
+    }
+
 
 //    private static String getUsername(String[] array, String type) {
 //        // request username from user until no duplicate username is entered
@@ -185,6 +235,13 @@ public class Main {
 //        }
 //}
     public static void main(String[] args) {
+        String n1 = "neta";
+        String n2 = "hadar";
+        String p1 = "djfj";
+        String p2 = "djfj";
+        Address add = new Address("bla", "fsf", "israel", 4);
+        manager.addNewSeller(n1,p1);
+        manager.addNewBuyer(n2, p2, add);
         menu();
     }
 
