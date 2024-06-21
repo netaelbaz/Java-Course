@@ -1,4 +1,4 @@
-import java.util.Arrays;
+package hadar_and_neta;
 
 public class Manager {
     private String systemName;
@@ -13,7 +13,26 @@ public class Manager {
         this.sellers = new Seller[2];
         this.buyers = new Buyer[2];
         this.systemName = systemName;
-        // מה עושים עם הsystem name
+    }
+
+    public int getSellersAmount() {
+        return this.sellersAmount;
+    }
+
+    public int getBuyersAmount() {
+        return this.buyersAmount;
+    }
+
+    public String getSystemName() {
+        return this.systemName;
+    }
+
+    public Buyer[] getBuyers() {
+        return buyers;
+    }
+
+    public Seller[] getSellers() {
+        return sellers;
     }
 
     public void addNewSeller(String username, String password) {
@@ -24,7 +43,6 @@ public class Manager {
     }
     this.sellers[this.sellersAmount] = new Seller(user);;
     this.sellersAmount ++;
-    System.out.println("Successfully added new seller");
     }
 
     public Address createAddress(String street, String city, String state, int buildingNumber) {
@@ -51,7 +69,6 @@ public class Manager {
     }
 
     private  void increaseBuyersArray() {
-        // increase array size by 2 and return new array
         Buyer[] tempArray = new Buyer[this.buyers.length *2];
         for (int i = 0; i < this.buyersAmount; i++) {
             tempArray[i] = this.buyers[i];
@@ -60,7 +77,6 @@ public class Manager {
     }
 
     public boolean findDuplicateSellerName(String username) {
-        // return false/true if duplicate found
         for (Seller seller : this.sellers) {
             if (seller != null && seller.getUser().getName().equals(username)) {
                 return true;
@@ -80,53 +96,49 @@ public class Manager {
         return false;
     }
 
-    public void addProductToSeller(int sellerIndex, String productName, double productPrice) {
-        // do all the validations here and return false if could not add product
+    public boolean addProductToSeller(int sellerIndex, String productName, double productPrice) {
+        if (!validateSellerIndex(sellerIndex)) {
+            return false;
+        }
         Product newProduct = new Product(productName, productPrice);
-        this.sellers[sellerIndex-1].addProduct(newProduct);
+        this.sellers[sellerIndex].addProduct(newProduct);
+        return true;
     }
 
     private boolean validateSellerIndex(int index) {
         return index >= 0 && index < this.sellersAmount;
     }
 
-    private boolean validateBuyerIndex(int index) {
+    public boolean validateBuyerIndex(int index) {
         return index >= 0 && index < this.buyersAmount;
     }
 
-    public int getSellersAmount() {
-        return this.sellersAmount;
-    }
-
-    public int getBuyersAmount() {
-        return this.buyersAmount;
-    }
-
-    public void printSellersName() {
+    public String getSellersName() {
+        String sellerNames = "";
         for (int i = 0; i < this.sellersAmount; i++) {
-            System.out.println(i+1 + ". " + this.sellers[i].getUser().getName());
+            String newLine = i == (this.sellersAmount -1) ? "" : "\n"; // add new line only if not last element
+            sellerNames += i+1 + ". " + this.sellers[i].getUser().getName() + newLine;
         }
+        return sellerNames;
     }
 
-    public void printBuyersName() {
+    public String getBuyersName() {
+        String buyerNames = "";
         for (int i = 0; i < this.buyersAmount; i++) {
-            System.out.println(i+1 + ". " + this.buyers[i].getUser().getName());
+            String newLine = i == (this.buyersAmount -1) ? "" : "\n"; // add new line only if not last element
+            buyerNames += i+1 + ". " + this.buyers[i].getUser().getName() + newLine;
         }
+        return buyerNames;
     }
 
-    public boolean printProductsOfSeller(int sellerIndex) {
-        if (!validateSellerIndex(sellerIndex)) {
-            return false;
+    public String getProductsOfSeller(int sellerIndex) {
+        if (validateSellerIndex(sellerIndex) && this.sellers[sellerIndex].getProductSize() != 0)  {
+            return this.sellers[sellerIndex].getStrOfProducts();
         }
-        if (this.sellers[sellerIndex-1].getProductSize() == 0) {
-            return false;
-        }
-        System.out.println(this.sellers[sellerIndex-1].printProducts()); // think about what to do with it
-        return true;
+        return null;
     }
 
     public boolean addProductToCart(int productIndex, int buyerIndex, int sellerIndex) {
-        // do all the validations here and return false if could not add product
         if (! validateBuyerIndex(buyerIndex)) {
             return false;
         }
@@ -139,16 +151,10 @@ public class Manager {
         return true;
     }
 
-    public void sellerToString() {
-        for (int i = 0; i < this.sellersAmount; i++) {
-            System.out.println(this.sellers[i].toString());
+    public double getCartPriceByBuyer(int buyerIndex) {
+        if (validateBuyerIndex(buyerIndex)) {
+            return this.buyers[buyerIndex].getCurrentCart().getPrice();
         }
+        return 0;
     }
-
-    public void buyerToString() {
-        for (int i = 0; i < this.buyersAmount; i++) {
-            System.out.println(this.buyers[i].toString());
-        }
-    }
-
 }

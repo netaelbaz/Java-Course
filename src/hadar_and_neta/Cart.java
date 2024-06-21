@@ -1,9 +1,11 @@
+package hadar_and_neta;
+
 import java.util.Date;
 
 public class Cart {
     private double price;
     private Product[] products;
-    private Date date; // move to order class
+    private Date date;
     private int productsAmount;
 
     public Cart() {
@@ -11,18 +13,23 @@ public class Cart {
         this.products = new Product[2];
         this.productsAmount = 0;
     }
-    public double getPrice() {
-        return price;
-    }
-    public void resetPrice(double price) {
-        this.price = 0;
+    public Date getDate() {
+        return date;
     }
     public Product[] getProducts() {
         return products;
     }
+    public double getPrice() {
+        return price;
+    }
+    public int getProductsAmount() {
+        return productsAmount;
+    }
+    public void updateDate() {
+        this.date = new Date();
+    }
 
     private void increaseProductArray() {
-        // increase array size by 2 and return new array
         Product[] tempArray = new Product[this.products.length *2];
         for (int i = 0; i < this.productsAmount; i++) {
             tempArray[i] = this.products[i];
@@ -38,22 +45,18 @@ public class Cart {
         this.productsAmount ++;
         this.price += product.getPrice();
     }
-    public Date getDate() {
-        return date;
-    }
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
     @Override
     public String toString() {
         String productsStr = "";
         for (int i = 0; i < this.productsAmount; i++) {
-            productsStr += (i+1) + "." + this.products[i].toString();
+            String newLine = i == (this.productsAmount - 1) ? "" : "\n"; // add new line only if not last element
+            productsStr += (i+1) + "." + this.products[i].toString() + newLine;
         }
         return "{" +
-                "price='" + this.price + '\'' +
-                ", products=" + productsStr +
+                "price = '" + this.price + '\'' +
+                ", products = [" + productsStr + ']' +
+                ", order date = " + this.date +
                 '}';
     }
 }

@@ -1,3 +1,5 @@
+package hadar_and_neta;
+
 public class Product {
     private String name;
     private double price;
@@ -15,11 +17,11 @@ public class Product {
     public String getName() {
         return name;
     }
+    public double getPrice() {
+            return price;
+        }
     public void setName(String name) {
         this.name = name;
-    }
-    public double getPrice() {
-        return price;
     }
     public void setPrice(double price) {
         this.price = price;
@@ -27,9 +29,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "{" +
-                "name='" + this.name + '\'' +
-                ", price=" + this.price +
-                '}';
+        return " Name = '" + this.name + '\'' +
+                ", Price = " + this.price;
     }
 }

@@ -1,3 +1,5 @@
+package hadar_and_neta;
+
 public class Address {
     private String street;
     private String city;
@@ -18,4 +20,16 @@ public class Address {
         this.buildingNumber = other.buildingNumber;
     }
 
+    public String getStreet() {
+        return street;
+    }
+    public String getCity() {
+        return city;
+    }
+    public String getState() {
+        return state;
+    }
+    public int getBuildingNumber() {
+        return buildingNumber;
+    }
 }

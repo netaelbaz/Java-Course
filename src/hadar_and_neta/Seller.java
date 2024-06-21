@@ -1,4 +1,4 @@
-import java.util.Arrays;
+package hadar_and_neta;
 
 public class Seller {
     private Username user;
@@ -13,6 +13,14 @@ public class Seller {
     public Username getUser() {
         return user;
     }
+
+    public Product[] getAllProducts() {
+        return allProducts;
+    }
+    public int getProductSize() {
+        return this.productSize;
+    }
+
     public void setUser(Username user) {
         this.user = user;
     }
@@ -33,10 +41,11 @@ public class Seller {
         this.productSize ++;
     }
 
-    public String printProducts() {
+    public String getStrOfProducts() {
         String productsStr = "";
         for (int i = 0; i < this.productSize; i++) {
-            productsStr += (i+1) + "." + this.allProducts[i].toString();
+            String newLine = i == (this.productSize - 1) ? "" : "\n"; // add new line only if not last element
+            productsStr += (i+1) + ". " + this.allProducts[i].toString() + newLine;
         }
         return productsStr;
     }
@@ -48,15 +57,11 @@ public class Seller {
         return this.allProducts[index];
     }
 
-    public int getProductSize() {
-        return this.productSize;
-    }
-
     @Override
     public String toString() {
-        return "{" +
-                "user='" + this.user.toString() + '\'' +
-                ", products=" + printProducts() +
-                '}';
+        return "{ " +
+                "User: " + this.user.toString() + '\n' +
+                "Products: " + '[' + getStrOfProducts() + ']' +
+                " }";
     }
 }

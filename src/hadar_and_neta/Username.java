@@ -1,3 +1,5 @@
+package hadar_and_neta;
+
 public class Username {
     private String name;
     private String password;
@@ -27,7 +29,7 @@ public class Username {
 
     @Override
     public String toString() {
-        return "Username [name=" + name +"]";
+        return "Username [name = " + name +"]";
     }
 
 }
