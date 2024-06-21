@@ -7,8 +7,6 @@ public class Main {
     final static String[] menuUsage = {"exit", "add seller", "add buyer", "add product to seller", "add product to buyer",
             "pay for buyer", "print buyer info", "print seller info"};
     static Scanner scanner = new Scanner(System.in);
-    static Manager manager = new Manager();
-
 
     private static void printMenuUsage() {
         System.out.println("Please enter a number from the following options");
@@ -17,7 +15,7 @@ public class Main {
         }
     }
 
-    private static void menu(){
+    private static void menu(Manager manager) {
         int choice;
         do {
             printMenuUsage();
@@ -28,16 +26,16 @@ public class Main {
                     System.out.println("You requested to exit.");
                     break;
                 case 1:
-                    addNewSeller();
+                    addNewSeller(manager);
                     break;
                 case 2:
-                    addNewBuyer();
+                    addNewBuyer(manager);
                     break;
                 case 3:
-                    addProductToSeller();
+                    addProductToSeller(manager);
                     break;
                 case 4:
-                    addProductBuyer();
+                    addProductToBuyer(manager);
                     break;
                 case 5:
 //                    payment();
@@ -55,7 +53,7 @@ public class Main {
         }
         while (choice != 0);
     }
-    private static void addNewSeller() {
+    private static void addNewSeller(Manager manager) {
         String username;
         boolean isDuplicate;
         do {
@@ -72,7 +70,7 @@ public class Main {
 
     }
 
-    private static void addNewBuyer() {
+    private static void addNewBuyer(Manager manager) {
         String username;
         boolean isDuplicate;
         do {
@@ -98,8 +96,8 @@ public class Main {
 
     }
 
-    private static void addProductToSeller() {
-        int sellersAmount = manager.getSellersAmount();
+    private static void addProductToSeller(Manager manager) {
+        int sellersAmount = manager.getSellersAmount(); // move to manager
         if (sellersAmount == 0) {
             System.out.println("No sellers yet");
         }
@@ -107,10 +105,10 @@ public class Main {
             System.out.println("Please choose the number of the seller to add the product to: ");
             manager.printSellersName();
             int sellerIndex = scanner.nextInt();
-            if (sellerIndex > sellersAmount || sellerIndex < 0) {
-                System.out.println("Index not valid");
-                return;
-            }
+//            if (! manager.validateSellerIndex(sellerIndex)) {
+//                System.out.println("Index not valid");
+//                return;
+//            }
             System.out.println("Please enter the name of the product: ");
             String productName = scanner.next();
             System.out.println("Please enter the price of the product: ");
@@ -119,33 +117,28 @@ public class Main {
         }
     }
 
-    private static void addProductBuyer() {
+    private static void addProductToBuyer(Manager manager) {
         // add product to buyer and specify which seller to buy from
-        int sellersAmount = manager.getSellersAmount();
         int buyersAmount = manager.getBuyersAmount();
-        if (sellersAmount == 0 || buyersAmount == 0) {
-            System.out.println("No buyers or sellers yet, can't finish action");
-            return;
-        }
+//        if (sellersAmount == 0 || buyersAmount == 0) { // move checks to manager
+//            System.out.println("No buyers or sellers yet, can't finish action");
+//            return;
+//        }
         System.out.println("Please choose the number of the buyer to add the product to: ");
         manager.printBuyersName();
         int buyerIndex = scanner.nextInt();
-        if (buyerIndex > buyersAmount || buyerIndex < 0) {
-            System.out.println("Buyer index not valid");
-            return;
-        }
         System.out.println("Please choose the number of the seller you want to buy from: ");
         manager.printSellersName();
         int sellerIndex = scanner.nextInt();
-        if (sellerIndex > sellersAmount || sellerIndex < 0) {
-            System.out.println("Seller index not valid");
-            return;
-        }
         System.out.println("Please enter the name of the product from the seller's products: ");
-        manager.printProductsOfSeller(sellerIndex);
+        if (!manager.printProductsOfSeller(sellerIndex)) {
+            System.out.println("Action failed, seller does not exits or doesn't have any products. product not added");
+            return;
+        };
         int productIndex = scanner.nextInt();
-        // validate index
-        manager.addProductToCart(productIndex-1, buyerIndex-1, sellerIndex-1);
+        if (!manager.addProductToCart(productIndex-1, buyerIndex-1, sellerIndex-1)) {
+            System.out.println("Action failed, buyer or product does not exits. product not added");
+        };
     }
 
 
@@ -240,9 +233,10 @@ public class Main {
         String p1 = "djfj";
         String p2 = "djfj";
         Address add = new Address("bla", "fsf", "israel", 4);
+        Manager manager = new Manager("ebay");
         manager.addNewSeller(n1,p1);
         manager.addNewBuyer(n2, p2, add);
-        menu();
+        menu(manager);
     }
 
 }

@@ -7,6 +7,11 @@ public class Username {
         this.password = password;
     }
 
+    public Username(Username other) {
+        this.name = other.name;
+        this.password = other.password;
+    }
+
     public String getName() {
         return name;
     }
@@ -18,6 +23,11 @@ public class Username {
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "Username [name=" + name +"]";
     }
 
 }

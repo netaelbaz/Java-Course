@@ -11,4 +11,11 @@ public class Address {
         this.buildingNumber = buildingNumber;
     }
 
+    public Address(Address other) {
+        this.street = other.street;
+        this.city = other.city;
+        this.state = other.state;
+        this.buildingNumber = other.buildingNumber;
+    }
+
 }

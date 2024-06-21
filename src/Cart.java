@@ -1,15 +1,14 @@
-import java.util.Arrays;
 import java.util.Date;
 
 public class Cart {
     private double price;
     private Product[] products;
-    private Date date;
+    private Date date; // move to order class
     private int productsAmount;
 
     public Cart() {
         this.price = 0;
-        this.products = new Product[0];
+        this.products = new Product[2];
         this.productsAmount = 0;
     }
     public double getPrice() {
@@ -24,8 +23,10 @@ public class Cart {
 
     private void increaseProductArray() {
         // increase array size by 2 and return new array
-        int newArrayLength = (this.productsAmount == 0) ? 1 : this.productsAmount *2;
-        Product[] tempArray = Arrays.copyOf(this.products, newArrayLength);
+        Product[] tempArray = new Product[this.products.length *2];
+        for (int i = 0; i < this.productsAmount; i++) {
+            tempArray[i] = this.products[i];
+        }
         this.products = tempArray;
     }
 

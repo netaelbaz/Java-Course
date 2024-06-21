@@ -6,8 +6,8 @@ public class Seller {
     private int productSize = 0;
 
     public Seller(Username user) {
-        this.user = user;
-        this.allProducts = new Product[0];
+        this.user = new Username(user);
+        this.allProducts = new Product[2];
     }
 
     public Username getUser() {
@@ -19,8 +19,10 @@ public class Seller {
 
     private void increaseProductArray() {
         // increase array size by 2 and return new array
-        int newArrayLength = (this.productSize == 0) ? 1 : this.productSize *2;
-        Product[] tempArray = Arrays.copyOf(this.allProducts, newArrayLength);
+        Product[] tempArray = new Product[this.allProducts.length *2];
+        for (int i = 0; i < this.productSize; i++) {
+            tempArray[i] = this.allProducts[i];
+        }
         this.allProducts = tempArray;
     }
     public void addProduct(Product product) {
@@ -40,7 +42,14 @@ public class Seller {
     }
 
     public Product getProductByIndex(int index) {
+        if (index < 0 || index >= this.productSize) {
+            return null;
+        }
         return this.allProducts[index];
+    }
+
+    public int getProductSize() {
+        return this.productSize;
     }
 
     @Override
