@@ -1,8 +1,7 @@
 //Neta Elbaz (209757020) && Hadar Kaner (207895418)
 // we both study with Keren
 
-import hadar_and_neta.Address;
-import hadar_and_neta.Manager;
+package hadar_and_neta;
 
 import java.util.Scanner;
 
@@ -94,8 +93,26 @@ public class Main {
         String city = scanner.next();
         System.out.println("Please enter the buyer's state");
         String state = scanner.next();
-        Address buyerAddress = manager.createAddress(streetName, city, state, buildingNumber);
+        Address buyerAddress = new Address(streetName, city, state, buildingNumber);
         manager.addNewBuyer(username, password, buyerAddress);
+    }
+
+    private static String displaySellerNames(Manager manager) {
+        StringBuilder sellerNames = new StringBuilder();
+        Seller[] sellers = manager.getSellers();
+        for (int i = 0; i < manager.getSellersAmount(); i++) {
+            sellerNames.append( i+1 + ". " + sellers[i].getUser().getName() + "\n");
+        }
+        return sellerNames.toString();
+    }
+
+    private static String displayBuyerNames(Manager manager) {
+        StringBuilder buyerNames = new StringBuilder();
+        Buyer[] buyers = manager.getBuyers();
+        for (int i = 0; i < manager.getBuyersAmount(); i++) {
+            buyerNames.append( i+1 + ". " + buyers[i].getUser().getName() + "\n");
+        }
+        return buyerNames.toString();
     }
 
     private static void addProductToSeller(Manager manager) {
@@ -104,40 +121,54 @@ public class Main {
         }
         else {
             System.out.println("Please choose the number of the seller to add the product to: ");
-            System.out.println(manager.getSellersName());
-            int sellerIndex = scanner.nextInt();
+            System.out.println(displaySellerNames(manager));
+            int sellerIndex = scanner.nextInt() -1;
+            if (!manager.validateSellerIndex(sellerIndex)) {
+                System.out.println("Seller index does not exists. Product not added");
+                return;
+            }
             System.out.println("Please enter the name of the product: ");
             String productName = scanner.next();
             System.out.println("Please enter the price of the product: ");
             double price = scanner.nextDouble();
-            if (!manager.addProductToSeller(sellerIndex-1, productName, price)) {
-                System.out.println("Action failed. Seller index do not exist");
-            }
+            manager.addProductToSeller(sellerIndex, productName, price);
         }
     }
 
     private static void addProductToBuyer(Manager manager) {
-        if (manager.getBuyersAmount() == 0 || manager.getSellersAmount() == 0) { // move checks to manager
+        if (manager.getBuyersAmount() == 0 || manager.getSellersAmount() == 0) {
             System.out.println("No buyers or sellers yet, can't finish action");
             return;
         }
         System.out.println("Please choose the number of the buyer to add the product to: ");
-        System.out.println(manager.getBuyersName());
-        int buyerIndex = scanner.nextInt();
+        System.out.println(displayBuyerNames(manager));
+        int buyerIndex = scanner.nextInt() -1; // display starts from one and not zero
+        if (!manager.validateBuyerIndex(buyerIndex)) {
+            System.out.println("Buyer index does not exists. Product not added");
+            return;
+        }
         System.out.println("Please choose the number of the seller you want to buy from: ");
-        System.out.println(manager.getSellersName());
-        int sellerIndex = scanner.nextInt();
-        String productsOfSeller = manager.getProductsOfSeller(sellerIndex-1);
-        if (productsOfSeller == null) {
-            System.out.println("Action failed, seller does not exits or doesn't have any products. product not added");
+        System.out.println(displaySellerNames(manager));
+        int sellerIndex = scanner.nextInt() -1;
+        if (!manager.validateSellerIndex(sellerIndex)) {
+            System.out.println("Seller index does not exists. Product not added");
+            return;
+        }
+        ProductList productsOfSeller = manager.getProductsOfSeller(sellerIndex);
+        if (productsOfSeller.getProductSize() == 0) {
+            System.out.println("Seller doesn't have any products. Product not added");
             return;
         }
         System.out.println("Please enter the number of the product from the seller's products: ");
-        System.out.println(productsOfSeller);
-        int productIndex = scanner.nextInt();
-        if (!manager.addProductToCart(productIndex-1, buyerIndex-1, sellerIndex-1)) {
-            System.out.println("Action failed, buyer or product does not exits. product not added");
-        };
+        for (int i = 0; i < productsOfSeller.getProductSize(); i++) {
+            System.out.println((i+1) + ". " +productsOfSeller.getAllProducts()[i].toString());
+        }
+        int productIndex = scanner.nextInt() -1;
+        if (!manager.validateProductIndex(productIndex, sellerIndex)) {
+            System.out.println("Product index is invalid. Product not added");
+            return;
+        }
+        manager.addProductToCart(productIndex, buyerIndex, sellerIndex);
     }
 
     private static void pay(Manager manager) {
@@ -146,13 +177,13 @@ public class Main {
             return;
         }
         System.out.println("Please choose the number of the buyer to pay for: ");
-        System.out.println(manager.getBuyersName());
-        int buyerIndex = scanner.nextInt();
-        if (!manager.validateBuyerIndex(buyerIndex-1)) {
+        System.out.println(displayBuyerNames(manager));
+        int buyerIndex = scanner.nextInt() - 1;
+        if (!manager.validateBuyerIndex(buyerIndex)) {
             System.out.println("Buyer index does not exists.");
             return;
         }
-        double price = manager.getCartPriceByBuyer(buyerIndex-1);
+        double price = manager.getCartPriceByBuyer(buyerIndex);
         System.out.println("The price cart is: " + price);
         if (price == 0) {
             System.out.println("Stopping payment.");
@@ -161,26 +192,25 @@ public class Main {
         System.out.println("Do you want to pay? [y/n]");
         char answer = scanner.next().toLowerCase().charAt(0);
         if (answer == 'y') {
-            manager.getBuyers()[buyerIndex-1].pay();
+            manager.getBuyers()[buyerIndex].pay();
         }
     }
 
     private static void printSellerInfo(Manager manager) {
         for (int i = 0; i < manager.getSellersAmount(); i++) {
-            System.out.println(manager.getSellers()[i].toString());
+            System.out.println( i+1 + ") "+ manager.getSellers()[i].toString() + '\n');
         }
     }
 
     private static void printBuyerInfo(Manager manager) {
         for (int i = 0; i < manager.getBuyersAmount(); i++) {
-            System.out.println(manager.getBuyers()[i].toString());
+            System.out.println( i+1 + ") " + manager.getBuyers()[i].toString() + '\n');
         }
     }
 
     public static void main(String[] args) {
         String n1 = "neta";
-        String n2 = "hadar";
-        String n3 = "niv";
+        String n3 = "hadar";
         String n4 = "itamar";
         String p1 = "djfj";
         String p2 = "djfj";
@@ -188,7 +218,6 @@ public class Main {
         Manager manager = new Manager("ebay");
         manager.addNewSeller(n1,p1);
         manager.addNewSeller(n3,p1);
-        manager.addNewBuyer(n2, p2, add);
         manager.addNewBuyer(n4, p2, add);
         menu(manager);
     }

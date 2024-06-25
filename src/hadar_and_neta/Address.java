@@ -32,4 +32,22 @@ public class Address {
     public int getBuildingNumber() {
         return buildingNumber;
     }
+    public void setStreet(String street) {
+        this.street = street;
+    }
+    public void setCity(String city) {
+        this.city = city;
+    }
+    public void setBuildingNumber(int buildingNumber) {
+        this.buildingNumber = buildingNumber;
+    }
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    @Override
+    public String toString() {
+        return this.buildingNumber + ',' + this.street + '\n'
+                + this.city + ',' + this.state;
+    }
 }

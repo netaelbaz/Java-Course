@@ -4,15 +4,17 @@ public class Manager {
     private String systemName;
 
     private Seller[] sellers;
-    private int sellersAmount = 0;
+    private int sellersAmount;
 
     private Buyer[] buyers;
-    private int buyersAmount = 0;
+    private int buyersAmount;
 
     public Manager(String systemName) {
         this.sellers = new Seller[2];
         this.buyers = new Buyer[2];
         this.systemName = systemName;
+        this.sellersAmount = 0;
+        this.buyersAmount = 0;
     }
 
     public int getSellersAmount() {
@@ -25,6 +27,10 @@ public class Manager {
 
     public String getSystemName() {
         return this.systemName;
+    }
+
+    public void setSystemName(String name) {
+        this.systemName = name;
     }
 
     public Buyer[] getBuyers() {
@@ -45,10 +51,6 @@ public class Manager {
     this.sellersAmount ++;
     }
 
-    public Address createAddress(String street, String city, String state, int buildingNumber) {
-        return new Address(street, city, state, buildingNumber);
-    }
-
     public void addNewBuyer(String username, String password, Address address) {
         Username user = new Username(username, password);
 
@@ -59,8 +61,59 @@ public class Manager {
         this.buyersAmount ++;
     }
 
+    public boolean findDuplicateSellerName(String username) {
+        for (Seller seller : this.sellers) {
+            if (seller != null && seller.getUser().getName().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean findDuplicateBuyerName(String username) {
+        for (Buyer buyer : this.buyers) {
+            if (buyer != null && buyer.getUser().getName().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addProductToSeller(int sellerIndex, String productName, double productPrice) {
+        Product newProduct = new Product(productName, productPrice);
+        this.sellers[sellerIndex].addProduct(newProduct);
+    }
+
+    public boolean validateSellerIndex(int index) {
+        return index >= 0 && index < this.sellersAmount;
+    }
+
+    public boolean validateBuyerIndex(int index) {
+        return index >= 0 && index < this.buyersAmount;
+    }
+
+    public boolean validateProductIndex(int productIndex, int sellerIndex) {
+        return productIndex >=0 && productIndex < this.sellers[sellerIndex].getProductList().getProductSize();
+    }
+
+    public ProductList getProductsOfSeller(int sellerIndex) {
+        return this.sellers[sellerIndex].getProductList();
+    }
+
+    public void addProductToCart(int productIndex,int buyerIndex, int sellerIndex) {
+        Product requestedProduct = this.sellers[sellerIndex].getProductByIndex(productIndex);
+        Product productToCart = new Product(requestedProduct);
+        this.buyers[buyerIndex].updateCart(productToCart);
+    }
+
+    public double getCartPriceByBuyer(int buyerIndex) {
+        if (validateBuyerIndex(buyerIndex)) {
+            return this.buyers[buyerIndex].getCurrentCart().getPrice();
+        }
+        return 0;
+    }
+
     private  void increaseSellersArray() {
-        // increase array size by 2 and return new array
         Seller[] tempArray = new Seller[this.sellers.length *2];
         for (int i = 0; i < this.sellersAmount; i++) {
             tempArray[i] = this.sellers[i];
@@ -74,87 +127,5 @@ public class Manager {
             tempArray[i] = this.buyers[i];
         }
         this.buyers = tempArray;
-    }
-
-    public boolean findDuplicateSellerName(String username) {
-        for (Seller seller : this.sellers) {
-            if (seller != null && seller.getUser().getName().equals(username)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean findDuplicateBuyerName(String username) {
-        // return false/true if duplicate found
-        // call this from the manager and not from the main
-        for (Buyer buyer : this.buyers) {
-            if (buyer != null && buyer.getUser().getName().equals(username)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean addProductToSeller(int sellerIndex, String productName, double productPrice) {
-        if (!validateSellerIndex(sellerIndex)) {
-            return false;
-        }
-        Product newProduct = new Product(productName, productPrice);
-        this.sellers[sellerIndex].addProduct(newProduct);
-        return true;
-    }
-
-    private boolean validateSellerIndex(int index) {
-        return index >= 0 && index < this.sellersAmount;
-    }
-
-    public boolean validateBuyerIndex(int index) {
-        return index >= 0 && index < this.buyersAmount;
-    }
-
-    public String getSellersName() {
-        String sellerNames = "";
-        for (int i = 0; i < this.sellersAmount; i++) {
-            String newLine = i == (this.sellersAmount -1) ? "" : "\n"; // add new line only if not last element
-            sellerNames += i+1 + ". " + this.sellers[i].getUser().getName() + newLine;
-        }
-        return sellerNames;
-    }
-
-    public String getBuyersName() {
-        String buyerNames = "";
-        for (int i = 0; i < this.buyersAmount; i++) {
-            String newLine = i == (this.buyersAmount -1) ? "" : "\n"; // add new line only if not last element
-            buyerNames += i+1 + ". " + this.buyers[i].getUser().getName() + newLine;
-        }
-        return buyerNames;
-    }
-
-    public String getProductsOfSeller(int sellerIndex) {
-        if (validateSellerIndex(sellerIndex) && this.sellers[sellerIndex].getProductSize() != 0)  {
-            return this.sellers[sellerIndex].getStrOfProducts();
-        }
-        return null;
-    }
-
-    public boolean addProductToCart(int productIndex, int buyerIndex, int sellerIndex) {
-        if (! validateBuyerIndex(buyerIndex)) {
-            return false;
-        }
-        Product requestedProduct = this.sellers[sellerIndex].getProductByIndex(productIndex);
-        if ( requestedProduct == null ) {
-            return false;
-        }
-        Product productToCart = new Product(requestedProduct);
-        this.buyers[buyerIndex].updateCart(productToCart);
-        return true;
-    }
-
-    public double getCartPriceByBuyer(int buyerIndex) {
-        if (validateBuyerIndex(buyerIndex)) {
-            return this.buyers[buyerIndex].getCurrentCart().getPrice();
-        }
-        return 0;
     }
 }

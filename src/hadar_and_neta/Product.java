@@ -19,7 +19,7 @@ public class Product {
     }
     public double getPrice() {
             return price;
-        }
+    }
     public void setName(String name) {
         this.name = name;
     }
@@ -29,7 +29,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return " Name = '" + this.name + '\'' +
+        return "Name = " + this.name +
                 ", Price = " + this.price;
     }
 }

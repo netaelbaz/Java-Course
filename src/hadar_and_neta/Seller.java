@@ -2,66 +2,39 @@ package hadar_and_neta;
 
 public class Seller {
     private Username user;
-    private Product[] allProducts;
-    private int productSize = 0;
+    private ProductList productList;
 
     public Seller(Username user) {
         this.user = new Username(user);
-        this.allProducts = new Product[2];
+        this.productList = new ProductList();
     }
 
     public Username getUser() {
         return user;
     }
 
-    public Product[] getAllProducts() {
-        return allProducts;
-    }
-    public int getProductSize() {
-        return this.productSize;
+    public ProductList getProductList() {
+        return this.productList;
     }
 
     public void setUser(Username user) {
-        this.user = user;
+        this.user = new Username(user);
     }
 
-    private void increaseProductArray() {
-        // increase array size by 2 and return new array
-        Product[] tempArray = new Product[this.allProducts.length *2];
-        for (int i = 0; i < this.productSize; i++) {
-            tempArray[i] = this.allProducts[i];
-        }
-        this.allProducts = tempArray;
-    }
     public void addProduct(Product product) {
-        if (this.productSize == this.allProducts.length) {
-            increaseProductArray();
-        }
-        this.allProducts[this.productSize] = product;
-        this.productSize ++;
-    }
-
-    public String getStrOfProducts() {
-        String productsStr = "";
-        for (int i = 0; i < this.productSize; i++) {
-            String newLine = i == (this.productSize - 1) ? "" : "\n"; // add new line only if not last element
-            productsStr += (i+1) + ". " + this.allProducts[i].toString() + newLine;
-        }
-        return productsStr;
+        this.productList.addProduct(product);
     }
 
     public Product getProductByIndex(int index) {
-        if (index < 0 || index >= this.productSize) {
+        if (index < 0 || index >= this.productList.getProductSize()) {
             return null;
         }
-        return this.allProducts[index];
+        return this.productList.getAllProducts()[index];
     }
 
     @Override
     public String toString() {
-        return "{ " +
-                "User: " + this.user.toString() + '\n' +
-                "Products: " + '[' + getStrOfProducts() + ']' +
-                " }";
+        return this.user.getName() + "\n" +
+                "Products: " + this.productList.toString();
     }
 }

@@ -5,19 +5,27 @@ public class Buyer {
     private Address address;
     private Cart currentCart;
     private Cart[] orderHistory;
-    private int orderHistorySize = 0;
+    private int orderHistorySize;
 
     public Buyer(Username user, Address address) {
         this.user = new Username(user);
         this.address = new Address(address);
         this.orderHistory = new Cart[2];
         this.currentCart = new Cart();
+        this.orderHistorySize = 0;
     }
+
     public Username getUser() {
         return user;
     }
+    public void setUser(Username user) {
+        this.user = new Username(user);
+    }
     public Address getAddress() {
         return address;
+    }
+    public void setAddress(Address address) {
+        this.address = new Address(address);
     }
     public Cart getCurrentCart() {
         return currentCart;
@@ -28,16 +36,8 @@ public class Buyer {
     public int getOrderHistorySize() {
         return orderHistorySize;
     }
-    private void increaseHistoryArray() {
-        // increase array size by 2 and return new array
-        Cart[] tempArray = new Cart[this.orderHistory.length *2];
-        for (int i = 0; i < this.orderHistorySize; i++) {
-            tempArray[i] = this.orderHistory[i];
-        }
-        this.orderHistory = tempArray;
-    }
     public void pay() {
-        this.currentCart.updateDate();
+        this.currentCart.setDateToCurrent();
         if (this.orderHistorySize == this.orderHistory.length){
             increaseHistoryArray();
         }
@@ -48,17 +48,25 @@ public class Buyer {
     public void updateCart(Product product) {
         this.currentCart.addProductToCart(product);
     }
+    private void increaseHistoryArray() {
+        Cart[] tempArray = new Cart[this.orderHistory.length *2];
+        for (int i = 0; i < this.orderHistorySize; i++) {
+            tempArray[i] = this.orderHistory[i];
+        }
+        this.orderHistory = tempArray;
+    }
 
     @Override
     public String toString() {
-        String cartHistoryStr = "";
-        for (int i = 0; i < this.orderHistorySize; i++) {
-            cartHistoryStr += (i+1) + "." + this.orderHistory[i].toString();
+        StringBuilder cartHistoryStr = new StringBuilder();
+        if  ( this.orderHistorySize == 0 ) {
+            cartHistoryStr.append("No orders history");
         }
-        return "{ " +
-                "User: " + this.user.toString() + '\n' +
-                "Current Cart: " + this.currentCart.toString() + "\n" +
-                "History: " + cartHistoryStr +
-                " }";
+        for (int i = 0; i < this.orderHistorySize; i++) {
+            cartHistoryStr.append("\n" + (i+1) + ") " + this.orderHistory[i].toString());
+        }
+        return this.user.getName() + '\n' +
+                "Current Cart: " + '\n' + this.currentCart.toString() + "\n" +
+                "History: " + cartHistoryStr.toString();
     }
 }
