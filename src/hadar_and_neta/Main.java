@@ -26,6 +26,7 @@ public class Main {
             switch (choice) {
                 case 0:
                     System.out.println("You requested to exit.");
+                    scanner.close();
                     break;
                 case 1:
                     addNewSeller(manager);
@@ -59,7 +60,7 @@ public class Main {
         String username;
         boolean isDuplicate;
         do {
-            System.out.println("Please enter the seller username");
+            System.out.println("Please enter the seller username (no spaces)");
             username = scanner.next();
             isDuplicate = manager.findDuplicateSellerName(username);
             if (isDuplicate) {
@@ -76,7 +77,7 @@ public class Main {
         String username;
         boolean isDuplicate;
         do {
-            System.out.println("Please enter the buyer username");
+            System.out.println("Please enter the buyer username (no spaces)");
             username = scanner.next();
             isDuplicate = manager.findDuplicateBuyerName(username);
             if (isDuplicate) {
@@ -85,16 +86,18 @@ public class Main {
         } while(isDuplicate);
         System.out.println("Please enter the buyer's password");
         String password = scanner.next();
+        System.out.println("Please enter the buyer's state (no spaces)");
+        String state = scanner.next();
+        scanner.nextLine(); // consume left over characters
+        System.out.println("Please enter the buyer's city");
+        String city = scanner.nextLine();
         System.out.println("Please enter the buyer's street name");
-        String streetName = scanner.next();
+        String streetName = scanner.nextLine();
         System.out.println("Please enter the buyer's building number");
         int buildingNumber = scanner.nextInt();
-        System.out.println("Please enter the buyer's city");
-        String city = scanner.next();
-        System.out.println("Please enter the buyer's state");
-        String state = scanner.next();
         Address buyerAddress = new Address(streetName, city, state, buildingNumber);
         manager.addNewBuyer(username, password, buyerAddress);
+        System.out.println(manager.getBuyers()[0].getAddress().toString());
     }
 
     private static String displaySellerNames(Manager manager) {
@@ -127,7 +130,7 @@ public class Main {
                 System.out.println("Seller index does not exists. Product not added");
                 return;
             }
-            System.out.println("Please enter the name of the product: ");
+            System.out.println("Please enter the name of the product (no spaces): ");
             String productName = scanner.next();
             System.out.println("Please enter the price of the product: ");
             double price = scanner.nextDouble();
@@ -197,28 +200,25 @@ public class Main {
     }
 
     private static void printSellerInfo(Manager manager) {
+        if (manager.getSellersAmount() == 0) {
+            System.out.println("System doesn't have sellers yet");
+        }
         for (int i = 0; i < manager.getSellersAmount(); i++) {
             System.out.println( i+1 + ") "+ manager.getSellers()[i].toString() + '\n');
         }
     }
 
     private static void printBuyerInfo(Manager manager) {
+        if (manager.getBuyersAmount() == 0) {
+            System.out.println("System doesn't have buyers yet");
+        }
         for (int i = 0; i < manager.getBuyersAmount(); i++) {
             System.out.println( i+1 + ") " + manager.getBuyers()[i].toString() + '\n');
         }
     }
 
     public static void main(String[] args) {
-        String n1 = "neta";
-        String n3 = "hadar";
-        String n4 = "itamar";
-        String p1 = "djfj";
-        String p2 = "djfj";
-        Address add = new Address("bla", "fsf", "israel", 4);
         Manager manager = new Manager("ebay");
-        manager.addNewSeller(n1,p1);
-        manager.addNewSeller(n3,p1);
-        manager.addNewBuyer(n4, p2, add);
         menu(manager);
     }
 
