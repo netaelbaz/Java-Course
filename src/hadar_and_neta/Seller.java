@@ -21,10 +21,6 @@ public class Seller {
         this.user = new Username(user);
     }
 
-    public void addProduct(Product product) {
-        this.productList.addProduct(product);
-    }
-
     public Product getProductByIndex(int index) {
         if (index < 0 || index >= this.productList.getProductSize()) {
             return null;

@@ -45,9 +45,7 @@ public class Buyer {
         this.orderHistorySize++;
         this.currentCart = new Cart();
     }
-    public void updateCart(Product product) {
-        this.currentCart.addProductToCart(product);
-    }
+
     private void increaseHistoryArray() {
         Cart[] tempArray = new Cart[this.orderHistory.length *2];
         for (int i = 0; i < this.orderHistorySize; i++) {

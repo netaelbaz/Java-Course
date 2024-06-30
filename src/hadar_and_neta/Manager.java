@@ -81,7 +81,7 @@ public class Manager {
 
     public void addProductToSeller(int sellerIndex, String productName, double productPrice) {
         Product newProduct = new Product(productName, productPrice);
-        this.sellers[sellerIndex].addProduct(newProduct);
+        this.sellers[sellerIndex].getProductList().addProduct(newProduct);
     }
 
     public boolean validateSellerIndex(int index) {
@@ -102,8 +102,7 @@ public class Manager {
 
     public void addProductToCart(int productIndex,int buyerIndex, int sellerIndex) {
         Product requestedProduct = this.sellers[sellerIndex].getProductByIndex(productIndex);
-        Product productToCart = new Product(requestedProduct);
-        this.buyers[buyerIndex].updateCart(productToCart);
+        this.buyers[buyerIndex].getCurrentCart().addProductToCart(new Product(requestedProduct));
     }
 
     public double getCartPriceByBuyer(int buyerIndex) {

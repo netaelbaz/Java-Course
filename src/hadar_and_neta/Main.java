@@ -195,6 +195,7 @@ public class Main {
         char answer = scanner.next().toLowerCase().charAt(0);
         if (answer == 'y') {
             manager.getBuyers()[buyerIndex].pay();
+            System.out.println("Payment succeeded");
         }
     }
 
