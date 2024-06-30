@@ -21,16 +21,16 @@ public class Address {
     }
 
     public String getStreet() {
-        return street;
+        return this.street;
     }
     public String getCity() {
-        return city;
+        return this.city;
     }
     public String getState() {
-        return state;
+        return this.state;
     }
     public int getBuildingNumber() {
-        return buildingNumber;
+        return this.buildingNumber;
     }
     public void setStreet(String street) {
         this.street = street;
@@ -48,6 +48,6 @@ public class Address {
     @Override
     public String toString() {
         return  this.street + ' ' + this.buildingNumber + '\n'
-                + this.city + ',' + this.state;
+                + this.city + ", " + this.state;
     }
 }

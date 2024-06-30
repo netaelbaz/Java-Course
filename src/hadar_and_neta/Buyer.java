@@ -16,25 +16,25 @@ public class Buyer {
     }
 
     public Username getUser() {
-        return user;
+        return this.user;
     }
     public void setUser(Username user) {
         this.user = new Username(user);
     }
     public Address getAddress() {
-        return address;
+        return this.address;
     }
     public void setAddress(Address address) {
         this.address = new Address(address);
     }
     public Cart getCurrentCart() {
-        return currentCart;
+        return this.currentCart;
     }
     public Cart[] getOrderHistory() {
-        return orderHistory;
+        return this.orderHistory;
     }
     public int getOrderHistorySize() {
-        return orderHistorySize;
+        return this.orderHistorySize;
     }
     public void pay() {
         this.currentCart.setDateToCurrent();

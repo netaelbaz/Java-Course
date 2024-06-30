@@ -12,13 +12,13 @@ public class Cart {
         this.productList = new ProductList();
     }
     public Date getDate() {
-        return date;
+        return this.date;
     }
     public ProductList getProductList() {
         return this.productList;
     }
     public double getPrice() {
-        return price;
+        return this.price;
     }
     public void setDateToCurrent() {
         this.date = new Date();

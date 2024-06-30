@@ -10,7 +10,7 @@ public class Seller {
     }
 
     public Username getUser() {
-        return user;
+        return this.user;
     }
 
     public ProductList getProductList() {

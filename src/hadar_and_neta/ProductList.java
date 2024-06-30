@@ -10,7 +10,7 @@ public class ProductList {
     }
 
     public Product[] getAllProducts() {
-        return allProducts;
+        return this.allProducts;
     }
     public int getProductSize() {
         return this.productSize;

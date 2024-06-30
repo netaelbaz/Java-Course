@@ -15,10 +15,10 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
     public double getPrice() {
-            return price;
+            return this.price;
     }
     public void setName(String name) {
         this.name = name;

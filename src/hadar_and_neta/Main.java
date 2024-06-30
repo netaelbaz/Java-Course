@@ -67,7 +67,7 @@ public class Main {
                 System.out.println("Username taken");
             }
         } while(isDuplicate);
-        System.out.println("Please enter the seller password");
+        System.out.println("Please enter the seller password (no spaces)");
         String password = scanner.next();
         manager.addNewSeller(username, password);
 
@@ -84,7 +84,7 @@ public class Main {
                 System.out.println("Username taken");
             }
         } while(isDuplicate);
-        System.out.println("Please enter the buyer's password");
+        System.out.println("Please enter the buyer's password (no spaces)");
         String password = scanner.next();
         System.out.println("Please enter the buyer's state (no spaces)");
         String state = scanner.next();
@@ -97,7 +97,6 @@ public class Main {
         int buildingNumber = scanner.nextInt();
         Address buyerAddress = new Address(streetName, city, state, buildingNumber);
         manager.addNewBuyer(username, password, buyerAddress);
-        System.out.println(manager.getBuyers()[0].getAddress().toString());
     }
 
     private static String displaySellerNames(Manager manager) {
