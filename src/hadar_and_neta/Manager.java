@@ -79,10 +79,10 @@ public class Manager {
         return false;
     }
 
-    public void addProductToSeller(int sellerIndex, String productName, double productPrice) {
-        Product newProduct = new Product(productName, productPrice);
-        this.sellers[sellerIndex].getProductList().addProduct(newProduct);
-    }
+//    public void addProductToSeller(int sellerIndex, String productName, double productPrice, Product.Category category) {
+//        Product newProduct = new Product(productName, productPrice, category);
+//        this.sellers[sellerIndex].getProductList().addProduct(newProduct);
+//    }
 
     public boolean validateSellerIndex(int index) {
         return index >= 0 && index < this.sellersAmount;

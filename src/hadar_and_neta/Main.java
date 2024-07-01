@@ -4,10 +4,11 @@
 package hadar_and_neta;
 
 import java.util.Scanner;
+import hadar_and_neta.Product.Category;
 
 public class Main {
     final static String[] menuUsage = {"exit", "add seller", "add buyer", "add product to seller", "add product to buyer",
-            "pay for buyer", "print buyer info", "print seller info"};
+            "pay for buyer", "print buyer info", "print seller info", "print products of category" };
     static Scanner scanner = new Scanner(System.in);
 
     private static void printMenuUsage() {
@@ -48,6 +49,9 @@ public class Main {
                     break;
                 case 7:
                     printSellerInfo(manager);
+                    break;
+                case 8:
+                    printAllProductsFromCategory(manager);
                     break;
                 default:
                     System.out.println("invalid choice");
@@ -133,7 +137,21 @@ public class Main {
             String productName = scanner.next();
             System.out.println("Please enter the price of the product: ");
             double price = scanner.nextDouble();
-            manager.addProductToSeller(sellerIndex, productName, price);
+            System.out.println("Please enter the product category from the following options:");
+            printCategories();
+            Product.Category category = Product.Category.valueOf(scanner.next().toUpperCase());
+            System.out.println("Does your product require special packaging? [y/n]");
+            char answer = scanner.next().toLowerCase().charAt(0);
+            Product newProduct;
+            if (answer == 'y') {
+                System.out.println("Please enter the price for the packaging");
+                double packagingPrice = scanner.nextDouble();
+                newProduct = new SpecialProduct(productName, price , category, packagingPrice);
+            }
+            else {
+                newProduct = new Product(productName, price , category);
+            }
+            manager.getSellers()[sellerIndex].getProductList().addProduct(newProduct);
         }
     }
 
@@ -199,6 +217,13 @@ public class Main {
         }
     }
 
+    private static void printAllProductsFromCategory(Manager manager) {
+        System.out.println("Please enter the product category from the following options:");
+        printCategories();
+        Product.Category category = Product.Category.valueOf(scanner.next().toUpperCase());
+        System.out.println(manager.getSellers()[0].getProductList().getProductByCategory(category));
+    }
+
     private static void printSellerInfo(Manager manager) {
         if (manager.getSellersAmount() == 0) {
             System.out.println("System doesn't have sellers yet");
@@ -214,6 +239,12 @@ public class Main {
         }
         for (int i = 0; i < manager.getBuyersAmount(); i++) {
             System.out.println( i+1 + ") " + manager.getBuyers()[i].toString() + '\n');
+        }
+    }
+
+    private static void printCategories() {
+        for (Category category : Category.values()) {
+            System.out.println(category);
         }
     }
 

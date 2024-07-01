@@ -23,6 +23,15 @@ public class ProductList {
         this.allProducts[this.productSize] = product;
         this.productSize ++;
     }
+    public String getProductByCategory(Product.Category category) {
+        StringBuilder prouductList = new StringBuilder();
+        for (int i = 0; i < this.productSize; i++) {
+            if (category == this.allProducts[i].getCategory()) {
+                prouductList.append( this.allProducts[i].toString() + "\n" );
+            }
+        }
+        return prouductList.toString();
+    }
 
     @Override
     public String toString() {
