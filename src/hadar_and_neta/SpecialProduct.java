@@ -18,6 +18,7 @@ public class SpecialProduct extends Product {
 
     @Override
     public String toString() {
-        return super.toString() + ", Packaging price = " + this.packagingPrice;
+        return super.toString() + ", Packaging price = " + this.packagingPrice
+                + ", Total price = " + ( this.getPrice() + this.packagingPrice ) ;
     }
 }

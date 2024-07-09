@@ -1,5 +1,7 @@
 package hadar_and_neta;
 
+import java.util.Comparator;
+
 public class Manager {
     private String systemName;
 
@@ -8,6 +10,7 @@ public class Manager {
 
     private Buyer[] buyers;
     private int buyersAmount;
+    private ExceptionUtil exceptionsManager;
 
     public Manager(String systemName) {
         this.sellers = new Seller[2];
@@ -15,6 +18,7 @@ public class Manager {
         this.systemName = systemName;
         this.sellersAmount = 0;
         this.buyersAmount = 0;
+        this.exceptionsManager = new ExceptionUtil();
     }
 
     public int getSellersAmount() {
@@ -79,11 +83,6 @@ public class Manager {
         return false;
     }
 
-//    public void addProductToSeller(int sellerIndex, String productName, double productPrice, Product.Category category) {
-//        Product newProduct = new Product(productName, productPrice, category);
-//        this.sellers[sellerIndex].getProductList().addProduct(newProduct);
-//    }
-
     public boolean validateSellerIndex(int index) {
         return index >= 0 && index < this.sellersAmount;
     }
@@ -93,7 +92,7 @@ public class Manager {
     }
 
     public boolean validateProductIndex(int productIndex, int sellerIndex) {
-        return productIndex >=0 && productIndex < this.sellers[sellerIndex].getProductList().getProductSize();
+        return productIndex >=0 && productIndex < this.sellers[sellerIndex].getProductList().getProductAmount();
     }
 
     public ProductList getProductsOfSeller(int sellerIndex) {
@@ -101,8 +100,20 @@ public class Manager {
     }
 
     public void addProductToCart(int productIndex,int buyerIndex, int sellerIndex) {
+//        if (!validateSellerIndex(sellerIndex)) {
+//            throw new SystemException("Seller index does not exists");
+//        }
+//        if (this.sellers[sellerIndex].getProductList().getProductSize() == 0) {
+//            throw new SystemException("Seller does not have any products");
+//        }
+//        if (!validateProductIndex(productIndex,sellerIndex)) {
+//            throw new SystemException("Product index does not exists");
+//        }
+//        if (!validateBuyerIndex(buyerIndex)) {
+//            throw new SystemException("Buyer index does not exists");
+//        }
         Product requestedProduct = this.sellers[sellerIndex].getProductByIndex(productIndex);
-        this.buyers[buyerIndex].getCurrentCart().addProductToCart(new Product(requestedProduct));
+        this.buyers[buyerIndex].getCurrentCart().addProductToCart(requestedProduct);
     }
 
     public double getCartPriceByBuyer(int buyerIndex) {
@@ -127,4 +138,15 @@ public class Manager {
         }
         this.buyers = tempArray;
     }
+//    public static void buyerInfoSort(Object[] arr, Comparator c){
+//        for (int i = arr.length-1; i > 0; i--) {
+//            for (int j = 0; j < i; j++) {
+//                if (c.compare(arr[j], arr[j+1]) > 0){
+//                    Object temp = arr[j];
+//                    arr[j] = arr[j+1];
+//                    arr[j+1] = temp;
+//                }
+//            }
+//        }
+//    }
 }

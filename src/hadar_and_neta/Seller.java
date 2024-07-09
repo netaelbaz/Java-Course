@@ -22,7 +22,7 @@ public class Seller {
     }
 
     public Product getProductByIndex(int index) {
-        if (index < 0 || index >= this.productList.getProductSize()) {
+        if (index < 0 || index >= this.productList.getProductAmount()) {
             return null;
         }
         return this.productList.getAllProducts()[index];

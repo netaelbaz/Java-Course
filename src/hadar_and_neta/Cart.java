@@ -2,7 +2,7 @@ package hadar_and_neta;
 
 import java.util.Date;
 
-public class Cart {
+public class Cart implements Cloneable{
     private double price;
     private ProductList productList;
     private Date date;
@@ -24,7 +24,11 @@ public class Cart {
         this.date = new Date();
     }
     public void addProductToCart(Product product) {
-        this.productList.addProduct(product);
+        Product productToAdd = new Product(product);
+        this.productList.addProduct(productToAdd);
+        if (product instanceof SpecialProduct) {
+            this.price += ((SpecialProduct) product).getPackagingPrice();
+        }
         this.price += product.getPrice();
     }
 
@@ -33,5 +37,12 @@ public class Cart {
         return  "Total Price: " + this.price + '\n' +
                 "Products: " + this.productList.toString() + '\n' +
                 "Order Date: " + (this.date != null ? this.date : "No order yet") ;
+    }
+
+    @Override
+    public Cart clone() throws CloneNotSupportedException {
+        Cart temp = (Cart)super.clone();
+        temp.productList = productList.clone();
+        return temp;
     }
 }

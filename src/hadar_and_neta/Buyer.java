@@ -36,6 +36,9 @@ public class Buyer {
     public int getOrderHistorySize() {
         return this.orderHistorySize;
     }
+    public void setCurrentCart(Cart newCart) {
+        this.currentCart = newCart;
+    }
     public void pay() {
         this.currentCart.setDateToCurrent();
         if (this.orderHistorySize == this.orderHistory.length){

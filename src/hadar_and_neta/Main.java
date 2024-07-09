@@ -3,6 +3,7 @@
 
 package hadar_and_neta;
 
+import java.util.Comparator;
 import java.util.Scanner;
 import hadar_and_neta.Product.Category;
 
@@ -23,12 +24,11 @@ public class Main {
         do {
             printMenuUsage();
             choice = scanner.nextInt();
-
             switch (choice) {
                 case 0:
                     System.out.println("You requested to exit.");
                     scanner.close();
-                    break;
+                    break; // exit
                 case 1:
                     addNewSeller(manager);
                     break;
@@ -53,9 +53,10 @@ public class Main {
                 case 8:
                     printAllProductsFromCategory(manager);
                     break;
+                case 9:
+                    revertOldOrder(manager);
                 default:
-                    System.out.println("invalid choice");
-
+                    System.out.println("Invalid choice");
             }
         }
         while (choice != 0);
@@ -74,7 +75,6 @@ public class Main {
         System.out.println("Please enter the seller password (no spaces)");
         String password = scanner.next();
         manager.addNewSeller(username, password);
-
     }
 
     private static void addNewBuyer(Manager manager) {
@@ -101,6 +101,7 @@ public class Main {
         int buildingNumber = scanner.nextInt();
         Address buyerAddress = new Address(streetName, city, state, buildingNumber);
         manager.addNewBuyer(username, password, buyerAddress);
+
     }
 
     private static String displaySellerNames(Manager manager) {
@@ -128,7 +129,7 @@ public class Main {
         else {
             System.out.println("Please choose the number of the seller to add the product to: ");
             System.out.println(displaySellerNames(manager));
-            int sellerIndex = scanner.nextInt() -1;
+            int sellerIndex = scanner.nextInt() - 1;
             if (!manager.validateSellerIndex(sellerIndex)) {
                 System.out.println("Seller index does not exists. Product not added");
                 return;
@@ -139,7 +140,8 @@ public class Main {
             double price = scanner.nextDouble();
             System.out.println("Please enter the product category from the following options:");
             printCategories();
-            Product.Category category = Product.Category.valueOf(scanner.next().toUpperCase());
+            int categoryOption = scanner.nextInt();
+            Category category = Category.values()[categoryOption];
             System.out.println("Does your product require special packaging? [y/n]");
             char answer = scanner.next().toLowerCase().charAt(0);
             Product newProduct;
@@ -175,12 +177,12 @@ public class Main {
             return;
         }
         ProductList productsOfSeller = manager.getProductsOfSeller(sellerIndex);
-        if (productsOfSeller.getProductSize() == 0) {
+        if (productsOfSeller.getProductAmount() == 0) {
             System.out.println("Seller doesn't have any products. Product not added");
             return;
         }
         System.out.println("Please enter the number of the product from the seller's products: ");
-        for (int i = 0; i < productsOfSeller.getProductSize(); i++) {
+        for (int i = 0; i < productsOfSeller.getProductAmount(); i++) {
             System.out.println((i+1) + ". " +productsOfSeller.getAllProducts()[i].toString());
         }
         int productIndex = scanner.nextInt() -1;
@@ -218,10 +220,25 @@ public class Main {
     }
 
     private static void printAllProductsFromCategory(Manager manager) {
+        int sellersAmount = manager.getSellersAmount();
+        Seller[] sellers = manager.getSellers();
+        if (sellersAmount == 0) {
+            System.out.println("System doesn't have sellers yet");
+            return;
+        }
         System.out.println("Please enter the product category from the following options:");
         printCategories();
-        Product.Category category = Product.Category.valueOf(scanner.next().toUpperCase());
-        System.out.println(manager.getSellers()[0].getProductList().getProductByCategory(category));
+        Category category = Category.values()[scanner.nextInt()];
+        for (int i = 0; i < sellersAmount; i++) {
+            String name = sellers[i].getUser().getName();
+            String productsByCategory = sellers[i].getProductList().getProductByCategory(category);
+            if (productsByCategory.isEmpty()){
+                System.out.println("There are no products in this category yet");
+            }
+            else {
+                System.out.println( name + ": "+ "\n" + productsByCategory);
+            }
+        }
     }
 
     private static void printSellerInfo(Manager manager) {
@@ -244,8 +261,33 @@ public class Main {
 
     private static void printCategories() {
         for (Category category : Category.values()) {
-            System.out.println(category);
+            System.out.println(category.ordinal() +". "+ category);
         }
+    }
+
+    private static void revertOldOrder(Manager manager) {
+        System.out.println("Please choose the number of the buyer to pay for: ");
+        System.out.println(displayBuyerNames(manager));
+        int buyerIndex = scanner.nextInt() - 1;
+        Buyer chosenBuyer = manager.getBuyers()[buyerIndex];
+        if (chosenBuyer.getCurrentCart().getProductList().getProductAmount() != 0 ) {
+            System.out.println("Buyer already has products in his current cart, switch with an old cart? [y/n]");
+            char answer = scanner.next().toLowerCase().charAt(0);
+            if (answer == 'y') {
+                System.out.println("Choose the number of cart you want");
+                if (chosenBuyer.getOrderHistorySize() == 0) {
+                    System.out.println("Buyer doesnt have order history");
+                    return;
+                }
+                for (int i=0; i< chosenBuyer.getOrderHistorySize(); i ++ ) {
+                    System.out.println( i+1 + ") " + chosenBuyer.getOrderHistory()[i].toString() + '\n');
+                }
+                int orderIndex = scanner.nextInt() - 1;
+                Cart order = chosenBuyer.getOrderHistory()[orderIndex];
+//                chosenBuyer.
+            }
+        }
+
     }
 
     public static void main(String[] args) {

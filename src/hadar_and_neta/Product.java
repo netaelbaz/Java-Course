@@ -1,13 +1,13 @@
 package hadar_and_neta;
 
-public class Product {
+public class Product implements Cloneable {
 
     public enum Category {
             KIDS,
             ELECTRICITY,
             OFFICE,
             CLOTHING,
-        };
+    };
     private Category category;
     private String name;
     private double price;
@@ -40,7 +40,7 @@ public class Product {
         return category;
     }
 
-    public int getIdProduct() {
+    public int getId() {
         return this.id;
     }
 
@@ -55,6 +55,11 @@ public class Product {
     public String toString() {
         return "Name = " + this.name +
                 ", Price = " + this.price +
-                ", Category = " + this.category;
+                ", Category = " + this.category + ", ID = " + this.id;
+    }
+
+    @Override
+    public Product clone() throws CloneNotSupportedException {
+        return (Product) super.clone();
     }
 }
