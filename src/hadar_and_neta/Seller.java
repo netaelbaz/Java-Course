@@ -1,15 +1,15 @@
 package hadar_and_neta;
 
 public class Seller {
-    private Username user;
+    private User user;
     private ProductList productList;
 
-    public Seller(Username user) {
-        this.user = new Username(user);
+    public Seller(User user) {
+        this.user = new User(user);
         this.productList = new ProductList();
     }
 
-    public Username getUser() {
+    public User getUser() {
         return this.user;
     }
 
@@ -17,8 +17,8 @@ public class Seller {
         return this.productList;
     }
 
-    public void setUser(Username user) {
-        this.user = new Username(user);
+    public void setUser(User user) {
+        this.user = new User(user);
     }
 
     public Product getProductByIndex(int index) {

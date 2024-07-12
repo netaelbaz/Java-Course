@@ -3,13 +3,12 @@
 
 package hadar_and_neta;
 
-import java.util.Comparator;
 import java.util.Scanner;
 import hadar_and_neta.Product.Category;
 
 public class Main {
     final static String[] menuUsage = {"exit", "add seller", "add buyer", "add product to seller", "add product to buyer",
-            "pay for buyer", "print buyer info", "print seller info", "print products of category" };
+            "pay for buyer", "print buyer info", "print seller info", "print products of category", "add old order to cart"};
     static Scanner scanner = new Scanner(System.in);
 
     private static void printMenuUsage() {
@@ -54,7 +53,8 @@ public class Main {
                     printAllProductsFromCategory(manager);
                     break;
                 case 9:
-                    revertOldOrder(manager);
+                    addOldOrderToCart(manager);
+                    break;
                 default:
                     System.out.println("Invalid choice");
             }
@@ -265,33 +265,47 @@ public class Main {
         }
     }
 
-    private static void revertOldOrder(Manager manager) {
-        System.out.println("Please choose the number of the buyer to pay for: ");
+    private static void addOldOrderToCart(Manager manager) {
+        if (manager.getBuyersAmount() == 0) {
+            System.out.println("System doesn't have buyers yet");
+            return;
+        }
+
+        System.out.println("Please choose the number of the buyer: ");
         System.out.println(displayBuyerNames(manager));
-        int buyerIndex = scanner.nextInt() - 1;
+        int buyerIndex = scanner.nextInt() - 1; // do validations
         Buyer chosenBuyer = manager.getBuyers()[buyerIndex];
         if (chosenBuyer.getCurrentCart().getProductList().getProductAmount() != 0 ) {
             System.out.println("Buyer already has products in his current cart, switch with an old cart? [y/n]");
             char answer = scanner.next().toLowerCase().charAt(0);
-            if (answer == 'y') {
-                System.out.println("Choose the number of cart you want");
-                if (chosenBuyer.getOrderHistorySize() == 0) {
-                    System.out.println("Buyer doesnt have order history");
-                    return;
-                }
-                for (int i=0; i< chosenBuyer.getOrderHistorySize(); i ++ ) {
-                    System.out.println( i+1 + ") " + chosenBuyer.getOrderHistory()[i].toString() + '\n');
-                }
-                int orderIndex = scanner.nextInt() - 1;
-                Cart order = chosenBuyer.getOrderHistory()[orderIndex];
-//                chosenBuyer.
+            if (answer == 'n') {
+                return;
             }
         }
-
+        if (chosenBuyer.getOrderHistorySize() == 0) {
+            System.out.println("Buyer doesnt have order history");
+            return;
+        }
+        System.out.println("Choose the number of cart you want");
+        for (int i=0; i< chosenBuyer.getOrderHistorySize(); i ++ ) {
+            System.out.println( i+1 + ") " + chosenBuyer.getOrderHistory()[i].toString() + '\n');
+        }
+        int orderIndex = scanner.nextInt() - 1;
+        Cart order = chosenBuyer.getOrderHistory()[orderIndex];
+        try {
+            chosenBuyer.setCurrentCart(order.clone());
+        }
+        catch (Exception e) {
+            System.out.println("exception captured"); //delete
+        }
     }
 
     public static void main(String[] args) {
         Manager manager = new Manager("ebay");
+        manager.addNewSeller("hadar", "fkjkfkf");
+        manager.addNewBuyer("neta", "ffff",
+                new Address("kfkf", "fkkf", "dd", 5) );
+        manager.addNewSeller("yaniv", "dkkdksd");
         menu(manager);
     }
 

@@ -1,7 +1,5 @@
 package hadar_and_neta;
 
-import java.util.Comparator;
-
 public class Manager {
     private String systemName;
 
@@ -10,7 +8,6 @@ public class Manager {
 
     private Buyer[] buyers;
     private int buyersAmount;
-    private ExceptionUtil exceptionsManager;
 
     public Manager(String systemName) {
         this.sellers = new Seller[2];
@@ -18,7 +15,6 @@ public class Manager {
         this.systemName = systemName;
         this.sellersAmount = 0;
         this.buyersAmount = 0;
-        this.exceptionsManager = new ExceptionUtil();
     }
 
     public int getSellersAmount() {
@@ -46,7 +42,7 @@ public class Manager {
     }
 
     public void addNewSeller(String username, String password) {
-    Username user = new Username(username, password);
+    User user = new User(username, password);
 
     if (this.sellersAmount == this.sellers.length) {
         increaseSellersArray();
@@ -56,7 +52,7 @@ public class Manager {
     }
 
     public void addNewBuyer(String username, String password, Address address) {
-        Username user = new Username(username, password);
+        User user = new User(username, password);
 
         if (this.buyersAmount == this.buyers.length) {
             increaseBuyersArray();
@@ -66,8 +62,8 @@ public class Manager {
     }
 
     public boolean findDuplicateSellerName(String username) {
-        for (Seller seller : this.sellers) {
-            if (seller != null && seller.getUser().getName().equals(username)) {
+        for (int i = 0; i < this.sellersAmount; i++) {
+            if (this.sellers[i].getUser().getName().equals(username)) {
                 return true;
             }
         }
@@ -75,8 +71,8 @@ public class Manager {
     }
 
     public boolean findDuplicateBuyerName(String username) {
-        for (Buyer buyer : this.buyers) {
-            if (buyer != null && buyer.getUser().getName().equals(username)) {
+        for (int i = 0; i < this.buyersAmount; i++) {
+            if (this.buyers[i].getUser().getName().equals(username)) {
                 return true;
             }
         }

@@ -1,15 +1,15 @@
 package hadar_and_neta;
 
-public class Username {
+public class User {
     private String name;
     private String password;
 
-    public Username(String name, String password) {
+    public User(String name, String password) {
         this.name = name;
         this.password = password;
     }
 
-    public Username(Username other) {
+    public User(User other) {
         this.name = other.name;
         this.password = other.password;
     }

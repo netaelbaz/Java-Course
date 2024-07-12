@@ -1,25 +1,25 @@
 package hadar_and_neta;
 
 public class Buyer {
-    private Username user;
+    private User user;
     private Address address;
     private Cart currentCart;
     private Cart[] orderHistory;
     private int orderHistorySize;
 
-    public Buyer(Username user, Address address) {
-        this.user = new Username(user);
+    public Buyer(User user, Address address) {
+        this.user = new User(user);
         this.address = new Address(address);
         this.orderHistory = new Cart[2];
         this.currentCart = new Cart();
         this.orderHistorySize = 0;
     }
 
-    public Username getUser() {
+    public User getUser() {
         return this.user;
     }
-    public void setUser(Username user) {
-        this.user = new Username(user);
+    public void setUser(User user) {
+        this.user = new User(user);
     }
     public Address getAddress() {
         return this.address;
