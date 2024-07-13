@@ -41,9 +41,7 @@ public class Manager {
         return sellers;
     }
 
-    public void addNewSeller(String username, String password) {
-    User user = new User(username, password);
-
+    public void addNewSeller(User user) throws IllegalArgumentException {
     if (this.sellersAmount == this.sellers.length) {
         increaseSellersArray();
     }
@@ -51,9 +49,7 @@ public class Manager {
     this.sellersAmount ++;
     }
 
-    public void addNewBuyer(String username, String password, Address address) {
-        User user = new User(username, password);
-
+    public void addNewBuyer(User user, Address address) throws IllegalArgumentException {
         if (this.buyersAmount == this.buyers.length) {
             increaseBuyersArray();
         }
@@ -79,44 +75,18 @@ public class Manager {
         return false;
     }
 
-    public boolean validateSellerIndex(int index) {
-        return index >= 0 && index < this.sellersAmount;
-    }
-
-    public boolean validateBuyerIndex(int index) {
-        return index >= 0 && index < this.buyersAmount;
-    }
-
-    public boolean validateProductIndex(int productIndex, int sellerIndex) {
-        return productIndex >=0 && productIndex < this.sellers[sellerIndex].getProductList().getProductAmount();
-    }
-
     public ProductList getProductsOfSeller(int sellerIndex) {
         return this.sellers[sellerIndex].getProductList();
     }
 
-    public void addProductToCart(int productIndex,int buyerIndex, int sellerIndex) {
-//        if (!validateSellerIndex(sellerIndex)) {
-//            throw new SystemException("Seller index does not exists");
-//        }
-//        if (this.sellers[sellerIndex].getProductList().getProductSize() == 0) {
-//            throw new SystemException("Seller does not have any products");
-//        }
-//        if (!validateProductIndex(productIndex,sellerIndex)) {
-//            throw new SystemException("Product index does not exists");
-//        }
-//        if (!validateBuyerIndex(buyerIndex)) {
-//            throw new SystemException("Buyer index does not exists");
-//        }
-        Product requestedProduct = this.sellers[sellerIndex].getProductByIndex(productIndex);
-        this.buyers[buyerIndex].getCurrentCart().addProductToCart(requestedProduct);
+    public void switchToOldCart(Buyer buyer, int orderIndex) throws CloneNotSupportedException {
+        Cart order = buyer.getOrderHistory()[orderIndex];
+        buyer.setCurrentCart(order.clone());
     }
 
-    public double getCartPriceByBuyer(int buyerIndex) {
-        if (validateBuyerIndex(buyerIndex)) {
-            return this.buyers[buyerIndex].getCurrentCart().getPrice();
-        }
-        return 0;
+    public void addProductToCart(int productIndex,int buyerIndex, int sellerIndex) {
+        Product requestedProduct = this.sellers[sellerIndex].getProductByIndex(productIndex);
+        this.buyers[buyerIndex].getCurrentCart().addProductToCart(requestedProduct);
     }
 
     private  void increaseSellersArray() {
@@ -134,15 +104,5 @@ public class Manager {
         }
         this.buyers = tempArray;
     }
-//    public static void buyerInfoSort(Object[] arr, Comparator c){
-//        for (int i = arr.length-1; i > 0; i--) {
-//            for (int j = 0; j < i; j++) {
-//                if (c.compare(arr[j], arr[j+1]) > 0){
-//                    Object temp = arr[j];
-//                    arr[j] = arr[j+1];
-//                    arr[j+1] = temp;
-//                }
-//            }
-//        }
-//    }
+
 }

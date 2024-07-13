@@ -1,5 +1,6 @@
 package hadar_and_neta;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class Cart implements Cloneable {
@@ -45,5 +46,15 @@ public class Cart implements Cloneable {
         temp.productList = productList.clone();
         temp.date = null;
         return temp;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Cart)) {
+            return false;
+        }
+        Cart otherCart = (Cart)other;
+        return otherCart.price == this.price && otherCart.date.equals(this.date) &&
+                otherCart.productList.equals(this.productList);
     }
 }

@@ -1,13 +1,15 @@
 package hadar_and_neta;
 
-public class Buyer {
+import java.util.Arrays;
+
+public class Buyer implements Comparable<Buyer> {
     private User user;
     private Address address;
     private Cart currentCart;
     private Cart[] orderHistory;
     private int orderHistorySize;
 
-    public Buyer(User user, Address address) {
+    public Buyer(User user, Address address) throws IllegalArgumentException {
         this.user = new User(user);
         this.address = new Address(address);
         this.orderHistory = new Cart[2];
@@ -18,14 +20,8 @@ public class Buyer {
     public User getUser() {
         return this.user;
     }
-    public void setUser(User user) {
-        this.user = new User(user);
-    }
     public Address getAddress() {
         return this.address;
-    }
-    public void setAddress(Address address) {
-        this.address = new Address(address);
     }
     public Cart getCurrentCart() {
         return this.currentCart;
@@ -35,6 +31,12 @@ public class Buyer {
     }
     public int getOrderHistorySize() {
         return this.orderHistorySize;
+    }
+    public void setAddress(Address address) throws IllegalArgumentException {
+        this.address = new Address(address);
+    }
+    public void setUser(User user) throws IllegalArgumentException {
+        this.user = new User(user);
     }
     public void setCurrentCart(Cart newCart) {
         this.currentCart = newCart;
@@ -64,10 +66,26 @@ public class Buyer {
             cartHistoryStr.append("No orders history");
         }
         for (int i = 0; i < this.orderHistorySize; i++) {
-            cartHistoryStr.append("\n" + (i+1) + ") " + this.orderHistory[i].toString());
+            cartHistoryStr.append("\n").append(i + 1).append(") ").append(this.orderHistory[i].toString());
         }
         return this.user.getName() + '\n' +
                 "Current Cart: " + '\n' + this.currentCart.toString() + "\n" +
                 "History: " + cartHistoryStr.toString();
+    }
+
+    @Override
+    public int compareTo(Buyer buyer) {
+        return this.getUser().getName().compareTo(buyer.getUser().getName());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Buyer)) {
+            return false;
+        }
+        Buyer otherBuyer = (Buyer)other;
+        return otherBuyer.user.equals(this.user) && otherBuyer.address.equals(this.address) &&
+                otherBuyer.currentCart.equals(this.currentCart) &&
+                Arrays.equals(this.orderHistory, otherBuyer.orderHistory);
     }
 }

@@ -15,17 +15,17 @@ public class Product implements Cloneable {
     private int id;
 
 
-    public Product(String name, double price, Category category) {
-        this.name = name;
-        this.price = price;
-        this.category = category;
+    public Product(String name, double price, Category category) throws IllegalArgumentException {
+        setName(name);
+        setPrice(price);
+        setCategory(category);
         this.id = ++counter;
     }
 
     public Product(Product other) {
-        this.name = other.name;
-        this.price = other.price;
-        this.category = other.category;
+        setName(other.name);
+        setPrice(other.price);
+        setCategory(other.category);
         this.id = ++counter;
     }
 
@@ -35,19 +35,26 @@ public class Product implements Cloneable {
     public double getPrice() {
         return this.price;
     }
-
     public Category getCategory() {
         return category;
     }
-
     public int getId() {
         return this.id;
     }
 
-    public void setName(String name) {
+    public void setCategory(Category newCategory) {
+        this.category = newCategory;
+    }
+    public void setName(String name) throws IllegalArgumentException{
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name can't be empty");
+        }
         this.name = name;
     }
     public void setPrice(double price) {
+        if (price == 0) {
+            throw new IllegalArgumentException("Price can't be zero");
+        }
         this.price = price;
     }
 
@@ -61,5 +68,16 @@ public class Product implements Cloneable {
     @Override
     public Product clone() throws CloneNotSupportedException {
         return (Product) super.clone();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Product)) {
+            return false;
+        }
+        Product otherProduct = (Product)other;
+        return otherProduct.name.equals(this.name) && otherProduct.id == this.id &&
+                otherProduct.price == this.price &&
+                otherProduct.category.equals(this.category);
     }
 }
